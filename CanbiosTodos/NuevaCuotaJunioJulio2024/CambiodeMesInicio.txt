@@ -1,0 +1,6 @@
+select * from Conceptos order by conId desc
+update Conceptos set conMesInicio = 3 where conid >=216
+select * from InscripcionConcepto where conid >=216
+Update InscripcionConcepto set icoNroCuota = 4 where conid >=216
+select * from ConceptosIntereses where  conid >=216
+Update ConceptosIntereses set coiNroCuota = 4 where conid >=216

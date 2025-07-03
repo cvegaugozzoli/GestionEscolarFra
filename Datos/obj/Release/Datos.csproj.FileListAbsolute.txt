@@ -1,0 +1,10 @@
+C:\Aplicativos\GESTIONESCOLAR\Datos\bin\Release\GESTIONESCOLAR.Datos.dll
+C:\Aplicativos\GESTIONESCOLAR\Datos\bin\Release\GESTIONESCOLAR.Datos.pdb
+C:\Aplicativos\GESTIONESCOLAR\Datos\obj\Release\Datos.csprojResolveAssemblyReference.cache
+C:\Aplicativos\GESTIONESCOLAR\Datos\obj\Release\GESTIONESCOLAR.Datos.dll
+C:\Aplicativos\GESTIONESCOLAR\Datos\obj\Release\GESTIONESCOLAR.Datos.pdb
+C:\Aplicativos\GestionEscolarFra\Datos\bin\Release\GESTIONESCOLAR.Datos.dll
+C:\Aplicativos\GestionEscolarFra\Datos\bin\Release\GESTIONESCOLAR.Datos.pdb
+C:\Aplicativos\GestionEscolarFra\Datos\obj\Release\Datos.csprojResolveAssemblyReference.cache
+C:\Aplicativos\GestionEscolarFra\Datos\obj\Release\GESTIONESCOLAR.Datos.dll
+C:\Aplicativos\GestionEscolarFra\Datos\obj\Release\GESTIONESCOLAR.Datos.pdb

@@ -1,0 +1,3 @@
+FTP: ftp://obramisericordista.com.ar/public_html/PaginasGenerales/ArchivosCaja/
+usuario: obram
+clave: MiseColegios445
