@@ -490,16 +490,16 @@ public partial class PaginasGenerales_Reporte : System.Web.UI.Page
         TableLogOnInfo crtablelogoninfo = new TableLogOnInfo();
         ConnectionInfo crConnectionInfo = new ConnectionInfo();
 
-        crConnectionInfo.ServerName = "localhost";
-        crConnectionInfo.DatabaseName = "GestionEscolarFra";
-        crConnectionInfo.UserID = "sa";
-        crConnectionInfo.Password = "ms2014";
-
-        //String Servidor = "PC\\SQL2012";
-        //crConnectionInfo.ServerName = Servidor;
+        //crConnectionInfo.ServerName = "localhost";
         //crConnectionInfo.DatabaseName = "GestionEscolarFra";
         //crConnectionInfo.UserID = "sa";
-        //crConnectionInfo.Password = "mds2013";
+        //crConnectionInfo.Password = "ms2014";
+
+        String Servidor = "PC\\SQL2012";
+        crConnectionInfo.ServerName = Servidor;
+        crConnectionInfo.DatabaseName = "GestionEscolarFra";
+        crConnectionInfo.UserID = "sa";
+        crConnectionInfo.Password = "mds2013";
 
         //String Servidor = "DESKTOP-DR5HH6H";
         //crConnectionInfo.ServerName = Servidor;
