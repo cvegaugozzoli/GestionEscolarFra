@@ -317,7 +317,7 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                                             MesesAtrasados = MesesAtrasados + (DateTime.Now.Date.Month - (Convert.ToInt32(dtConc.Rows[0]["ConMesInicio"].ToString()) - 1)) - Convert.ToInt32(Convert.ToInt32(row["NroCuota"].ToString()));
                                                         }
                                                 }
-                                                Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(dtConc.Rows[0]["ConImporte"].ToString()) + ValorInteres));
+                                                Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(ImporteBecado) + ValorInteres));
 
                                                 if (InteresMensualaPagar > 0)
                                                 {
@@ -503,7 +503,7 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                                             MesesAtrasados = MesesAtrasados + (DateTime.Now.Date.Month - (Convert.ToInt32(dtConc.Rows[0]["ConMesInicio"].ToString()) - 1)) - Convert.ToInt32(Convert.ToInt32(row["NroCuota"].ToString()));
                                                         }
                                                 }
-                                                Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(dtConc.Rows[0]["ConImporte"].ToString()) + ValorInteres));
+                                                Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(ImporteBecado) + ValorInteres));
 
                                                 if (InteresMensualaPagar > 0)
                                                 {
@@ -739,7 +739,7 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                                             MesesAtrasados = MesesAtrasados + (DateTime.Now.Date.Month - (Convert.ToInt32(dtConc.Rows[0]["ConMesInicio"].ToString()) - 1)) - Convert.ToInt32(Convert.ToInt32(row["NroCuota"].ToString()));
                                                         }
                                                 }
-                                                Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(dtConc.Rows[0]["ConImporte"].ToString()) + ValorInteres));
+                                                Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(ImporteBecado) + ValorInteres));
 
 
                                                 if (InteresMensualaPagar > 0)
@@ -927,7 +927,7 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                                             MesesAtrasados = MesesAtrasados + (DateTime.Now.Date.Month - (Convert.ToInt32(dtConc.Rows[0]["ConMesInicio"].ToString()) - 1)) - Convert.ToInt32(Convert.ToInt32(row["NroCuota"].ToString()));
                                                         }
                                                 }
-                                                Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(dtConc.Rows[0]["ConImporte"].ToString()) + ValorInteres));
+                                                Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(ImporteBecado) + ValorInteres));
 
                                                 if (InteresMensualaPagar > 0)
                                                 {

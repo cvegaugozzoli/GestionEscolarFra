@@ -1486,6 +1486,28 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                     BecaId.DataSource = (new GESTIONESCOLAR.Negocio.Becas()).ObtenerLista("[Seleccionar...]");
                     BecaId.DataBind();
                 }
+
+                DataTable dtC = new DataTable();
+                dtC = ocnConceptos.ObtenerUno(ConceptoVer);
+                if (dtC.Rows.Count > 0)
+                {
+                    //FchaInscripcionCon = Convert.ToString(dtC.Rows[0]["FechaInscripcion"].ToString());
+                   if (Convert.ToInt32(dtC.Rows[0]["conCantCuotas"].ToString()) == 1)
+                    {
+                        DataTable dtCI = new DataTable();
+                        dtCI = ocnConceptosIntereses.ObtenerInteresxconId(ConceptoVer);
+                        if (dtCI.Rows.Count > 0)
+                        {
+                            CuotaId.SelectedValue = Convert.ToString(dtCI.Rows[0]["NroCuota"].ToString());
+                        }
+                    } else
+                    {
+                        CuotaId.SelectedValue = "0";
+                    }
+
+                }
+                
+
             }
         }
         catch (Exception oError)
