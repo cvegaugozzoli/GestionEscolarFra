@@ -7,6 +7,11 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.IO;
 using System.Text;
+using System.Linq;
+using System.Configuration;
+using System.Net.Mail;
+using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
 
 public partial class CuentaCorriente : System.Web.UI.Page
 {
@@ -323,7 +328,7 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                             ImporteBecado += (Convert.ToDecimal(row["Importe"].ToString()) - (Convert.ToDecimal(row["Importe"].ToString()) * Convert.ToDecimal(row["BecasInteres"].ToString()) / 100));
                                             row1["Importe"] = Convert.ToDecimal(string.Format("{0:0.00}", ImporteBecado));
                                             //row1["ImporteInteres"] = Convert.ToDecimal(dtConc.Rows[0]["InteresMensual"].ToString());
-                                            row1["ImporteInteres"] = 0;
+                                            row1["ImporteInteres"] = Convert.ToDecimal(dt2.Rows[0]["cdeImporte"].ToString()) - Convert.ToDecimal(string.Format("{0:0.00}", ImporteBecado));
                                             row1["AnioLectivo"] = Convert.ToInt32(row["AnioLectivo"].ToString());
                                             row1["Beca"] = Convert.ToString((row["Becas"].ToString()));
                                             row1["BecId"] = Convert.ToString((row["BecId"].ToString()));
@@ -426,13 +431,25 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                                     }
                                                     else
                                                     {
-                                                        MesesAtrasados = MesesAtrasados + DateTime.Now.Date.Month - Convert.ToInt32(dtConc.Rows[0]["ConMesInicio"].ToString());
+                                                        //MesesAtrasados = MesesAtrasados + DateTime.Now.Date.Month - Convert.ToInt32(dtConc.Rows[0]["ConMesInicio"].ToString());
+                                                        MesesAtrasados = MesesAtrasados + (DateTime.Now.Date.Month - (Convert.ToInt32(dtConc.Rows[0]["ConMesInicio"].ToString()) - 1)) - Convert.ToInt32(Convert.ToInt32(row["NroCuota"].ToString()));
                                                     }
                                             }
-                                            Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(dtConc.Rows[0]["ConImporte"].ToString()) + ValorInteres));
+                                            Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(ImporteBecado) + ValorInteres));
                                             if (InteresMensualaPagar > 0)
                                             {
-                                                ValorInteres = ValorInteres + InteresMensualaPagar;
+                                                if (InteresMensualaPagar > 0)
+                                                {
+
+                                                    if (Convert.ToDateTime(row2["FechaVto"].ToString()) > DateTime.Now)
+                                                    {
+                                                        ValorInteres = 0;
+                                                    }
+                                                    else
+                                                    {
+                                                        ValorInteres = ValorInteres + InteresMensualaPagar;
+                                                    }
+                                                }
                                             }
 
                                             row1["ImporteInteres"] = Convert.ToDecimal(string.Format("{0:0.00}", ValorInteres));
@@ -485,7 +502,7 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                     Decimal ImporteBecado = 0;
                                     if (Bandera == 0)
                                     {
-                                        if (dt2.Rows.Count > 0)
+                                        if (dt2.Rows.Count > 0) // concepto pagado
                                         {
                                             dtConc = ocnConceptos.ObtenerUno(Convert.ToInt32(Convert.ToInt32(row["conId"].ToString())));
                                             dt6 = ocnComprobantesCabecera.ObtenerUno(Convert.ToInt32(dt2.Rows[0]["cocId"].ToString()));
@@ -501,7 +518,10 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                             ImporteBecado += (Convert.ToDecimal(row["Importe"].ToString()) - (Convert.ToDecimal(row["Importe"].ToString()) * Convert.ToDecimal(row["BecasInteres"].ToString()) / 100));
                                             row1["Importe"] = Convert.ToDecimal(string.Format("{0:0.00}", ImporteBecado));
                                             //row1["ImporteInteres"] = Convert.ToDecimal(dtConc.Rows[0]["InteresMensual"].ToString());
-                                            row1["ImporteInteres"] = 0;
+                                            row1["ImporteInteres"] = Convert.ToDecimal(dt2.Rows[0]["cdeImporte"].ToString()) - Convert.ToDecimal(string.Format("{0:0.00}", ImporteBecado));
+
+
+                                            //row1["ImporteInteres"] = 0;
                                             //14/10/22
                                             //row1["ImporteInteres"] =  "1000";
 
@@ -602,16 +622,25 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                                     }
                                                     else
                                                     {
-                                                        MesesAtrasados = MesesAtrasados + DateTime.Now.Date.Month - Convert.ToInt32(dtConc.Rows[0]["ConMesInicio"].ToString());
+                                                        //MesesAtrasados = MesesAtrasados + DateTime.Now.Date.Month - Convert.ToInt32(dtConc.Rows[0]["ConMesInicio"].ToString());
+                                                        MesesAtrasados = MesesAtrasados + (DateTime.Now.Date.Month - (Convert.ToInt32(dtConc.Rows[0]["ConMesInicio"].ToString()) - 1)) - Convert.ToInt32(Convert.ToInt32(row["NroCuota"].ToString()));
                                                     }
                                             }
-                                            Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(dtConc.Rows[0]["ConImporte"].ToString()) + ValorInteres));
-                                            if (InteresMensualaPagar >0 )
-                                            {
-                                                ValorInteres = ValorInteres + InteresMensualaPagar;
-                                            }
+                                            //Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(dtConc.Rows[0]["ConImporte"].ToString()) + ValorInteres));
+                                            Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(ImporteBecado) + ValorInteres));
                                             
+                                            if (InteresMensualaPagar > 0)
+                                            {
 
+                                                if (Convert.ToDateTime(row2["FechaVto"].ToString()) > DateTime.Now)
+                                                {
+                                                    ValorInteres = 0;
+                                                }
+                                                else
+                                                {
+                                                    ValorInteres = ValorInteres + InteresMensualaPagar;
+                                                }
+                                            }
                                             row1["ImporteInteres"] = Convert.ToDecimal(string.Format("{0:0.00}", ValorInteres));
                                             row1["AnioLectivo"] = Convert.ToInt32(row["AnioLectivo"].ToString());
                                             row1["Beca"] = Convert.ToString((row["Becas"].ToString()));
@@ -621,6 +650,8 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                             //row1["FechaVto"] = Convert.ToString(Vto); 
                                             row1["ValorInteres"] = Convert.ToDecimal(row2["ValorInteres"].ToString());
                                             row1["ImpPagado"] = 0;
+
+
                                             row1["FechaPago"] = "";
                                             row1["NroCompbte"] = "";
                                             row1["Curso"] = Convert.ToString(dt3.Rows[0]["Curso"].ToString());
@@ -1513,6 +1544,289 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
 
     }
 
+    #region Envio de Estado de Cuenta por Mail
+
+    protected void btnEnviarMailClick(object sender, EventArgs e)
+    {
+        lblMensajeMail.Text = "";
+
+        if (lblaluId.Text == "0" || lblaluId.Text == "")
+        {
+            lblMensajeMail.ForeColor = System.Drawing.Color.Red;
+            lblMensajeMail.Text = "Debe buscar y seleccionar un alumno";
+            return;
+        }
+
+        CargarContactosMail(Convert.ToInt32(lblaluId.Text));
+        pnlEnviarMail.Visible = true;
+    }
+
+    protected void btnCancelarEnvioMailClick(object sender, EventArgs e)
+    {
+        pnlEnviarMail.Visible = false;
+        lblMensajeMail.Text = "";
+    }
+
+    /// <summary>
+    /// Arma la grilla de posibles destinatarios: el alumno mismo + todos los familiares
+    /// (padre, madre, tutor, etc.) que tenga vinculados en AlumnoFamiliar/Familiar.
+    /// Se tildan por defecto los que ya tienen un mail cargado.
+    /// </summary>
+    private void CargarContactosMail(int aluIdSel)
+    {
+        DataTable dtContactos = new DataTable();
+        dtContactos.Columns.Add("TipoOrigen");   // "ALU" o "FAM"
+        dtContactos.Columns.Add("IdOrigen");     // aluId o famId, como string (así entra derecho en DataKeyNames)
+        dtContactos.Columns.Add("Descripcion");
+        dtContactos.Columns.Add("Mail");
+        dtContactos.Columns.Add("Seleccionado", typeof(bool));
+
+        // Fila del alumno
+        GESTIONESCOLAR.Negocio.Alumno ocnAlu = new GESTIONESCOLAR.Negocio.Alumno(aluIdSel);
+        DataRow filaAlu = dtContactos.NewRow();
+        filaAlu["TipoOrigen"] = "ALU";
+        filaAlu["IdOrigen"] = aluIdSel.ToString();
+        filaAlu["Descripcion"] = ocnAlu.aluNombre + " (Alumno)";
+        filaAlu["Mail"] = ocnAlu.aluMail;
+        filaAlu["Seleccionado"] = !string.IsNullOrWhiteSpace(ocnAlu.aluMail);
+        dtContactos.Rows.Add(filaAlu);
+
+        // Filas de los familiares (padre/madre/tutor/etc., según lo cargado en AlumnoFamiliar)
+        GESTIONESCOLAR.Negocio.AlumnoFamiliar ocnAF = new GESTIONESCOLAR.Negocio.AlumnoFamiliar();
+        DataTable dtFam = ocnAF.ObtenerContactosMail(aluIdSel);
+        foreach (DataRow row in dtFam.Rows)
+        {
+            DataRow fila = dtContactos.NewRow();
+            fila["TipoOrigen"] = "FAM";
+            fila["IdOrigen"] = Convert.ToString(row["famId"]);
+
+            string parentesco = row["patDescripcion"] == DBNull.Value ? "" : Convert.ToString(row["patDescripcion"]);
+            string nombreCompleto = (Convert.ToString(row["famApellido"]) + " " + Convert.ToString(row["famNombre"])).Trim();
+            fila["Descripcion"] = nombreCompleto + (string.IsNullOrEmpty(parentesco) ? "" : " (" + parentesco + ")");
+
+            string mail = row["famMail"] == DBNull.Value ? "" : Convert.ToString(row["famMail"]);
+            fila["Mail"] = mail;
+            fila["Seleccionado"] = !string.IsNullOrWhiteSpace(mail);
+
+            dtContactos.Rows.Add(fila);
+        }
+
+        grdContactosMail.DataSource = dtContactos;
+        grdContactosMail.DataBind();
+    }
+
+    protected void btnConfirmarEnvioMailClick(object sender, EventArgs e)
+    {
+        try
+        {
+            List<string> destinatarios = new List<string>();
+            // Guardamos qué hay que actualizar en BD: Key = "ALU|123" o "FAM|456", Value = mail nuevo
+            List<KeyValuePair<string, string>> paraGuardar = new List<KeyValuePair<string, string>>();
+
+            foreach (GridViewRow row in grdContactosMail.Rows)
+            {
+                CheckBox chk = row.FindControl("chkSeleccionado") as CheckBox;
+                TextBox txt = row.FindControl("txtMailContacto") as TextBox;
+                if (chk == null || txt == null || !chk.Checked) continue;
+
+                string mail = txt.Text.Trim();
+
+                if (!EsEmailValido(mail))
+                {
+                    lblMensajeMail.ForeColor = System.Drawing.Color.Red;
+                    lblMensajeMail.Text = "El email de \"" + row.Cells[1].Text + "\" no es válido.";
+                    return;
+                }
+
+                destinatarios.Add(mail);
+
+                string tipoOrigen = Convert.ToString(grdContactosMail.DataKeys[row.RowIndex].Values["TipoOrigen"]);
+                string idOrigen = Convert.ToString(grdContactosMail.DataKeys[row.RowIndex].Values["IdOrigen"]);
+                paraGuardar.Add(new KeyValuePair<string, string>(tipoOrigen + "|" + idOrigen, mail));
+            }
+
+            if (destinatarios.Count == 0)
+            {
+                lblMensajeMail.ForeColor = System.Drawing.Color.Red;
+                lblMensajeMail.Text = "Debe seleccionar al menos un destinatario.";
+                return;
+            }
+
+            byte[] pdfBytes = GenerarPdfEstadoCuentaBytes();
+
+            using (MailMessage mensaje = new MailMessage())
+            {
+                mensaje.From = new MailAddress(ConfigurationManager.AppSettings["SmtpMailOrigen"], "Colegio");
+                foreach (string mail in destinatarios)
+                {
+                    mensaje.To.Add(new MailAddress(mail));
+                }
+                mensaje.Subject = "Estado de Cuenta - " + aluNombre.Text;
+                mensaje.IsBodyHtml = true;
+                mensaje.Body = "<p>Estimado/a,</p><p>Adjuntamos el estado de cuenta de <b>" + aluNombre.Text + "</b>.</p><p>Saludos.</p>";
+
+                using (MemoryStream msAdjunto = new MemoryStream(pdfBytes))
+                {
+                    mensaje.Attachments.Add(new Attachment(msAdjunto, "EstadoCuenta_" + aludni.Text + ".pdf", "application/pdf"));
+
+                    GESTIONESCOLAR.Negocio.Email oEmail = new GESTIONESCOLAR.Negocio.Email();
+                    oEmail.MandarCorreo(mensaje); // reutiliza el gestor de correo ya existente en NegocioCS
+                }
+            }
+
+            if (chkGuardarEmail.Checked)
+            {
+                foreach (var kvp in paraGuardar)
+                {
+                    string[] partes = kvp.Key.Split('|');
+                    string tipoOrigen = partes[0];
+                    int idOrigen = Convert.ToInt32(partes[1]);
+                    string mail = kvp.Value;
+
+                    if (tipoOrigen == "ALU")
+                    {
+                        GESTIONESCOLAR.Negocio.Alumno ocn = new GESTIONESCOLAR.Negocio.Alumno(idOrigen);
+                        if (ocn.aluMail != mail)
+                        {
+                            ocn.aluMail = mail;
+                            ocn.usuIdUltimaModificacion = this.Master.usuId;
+                            ocn.aluFechaHoraUltimaModificacion = DateTime.Now;
+                            ocn.Actualizar();
+                        }
+                    }
+                    else // "FAM"
+                    {
+                        GESTIONESCOLAR.Negocio.Familiar ocnFam = new GESTIONESCOLAR.Negocio.Familiar(idOrigen);
+                        if (ocnFam.famMail != mail)
+                        {
+                            ocnFam.famMail = mail;
+                            ocnFam.usuIdUltimaModificacion = this.Master.usuId;
+                            ocnFam.famFechaHoraUltimaModificacion = DateTime.Now;
+                            ocnFam.Actualizar();
+                        }
+                    }
+                }
+            }
+
+            lblMensajeMail.ForeColor = System.Drawing.Color.Green;
+            lblMensajeMail.Text = "Comprobante enviado correctamente a " + destinatarios.Count + " destinatario(s).";
+            pnlEnviarMail.Visible = false;
+        }
+        catch (Exception oError)
+        {
+            lblMensajeMail.ForeColor = System.Drawing.Color.Red;
+            lblMensajeMail.Text = "No se pudo enviar el correo: " + oError.Message;
+        }
+    }
+
+    private bool EsEmailValido(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email)) return false;
+        try
+        {
+            var addr = new MailAddress(email);
+            return addr.Address == email;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Genera en memoria el mismo PDF que produce hoy el botón "Imprimir" (mismo .rpt, mismo parámetro),
+    /// pero exportando a un array de bytes en vez de escribirlo directo en la Response,
+    /// para poder adjuntarlo a un mail.
+    /// </summary>
+    private byte[] GenerarPdfEstadoCuentaBytes()
+    {
+        ReportDocument cr = new ReportDocument();
+        try
+        {
+            // 1) Volcamos la grilla actual a la tabla temporal, igual que hace btnImprimirClick
+            ocnTEMESTADOCUENTA.EliminarTodo();
+            int Id = 0;
+            foreach (GridViewRow row in GrillaHistorial.Rows)
+            {
+                ocnTEMESTADOCUENTA = new GESTIONESCOLAR.Negocio.TEMESTADOCUENTA(Convert.ToInt32(Id));
+                ocnTEMESTADOCUENTA.tecConcepto = Convert.ToString(GrillaHistorial.DataKeys[row.RowIndex].Values["Concepto"]);
+                ocnTEMESTADOCUENTA.tecNumCuota = Convert.ToInt32(GrillaHistorial.DataKeys[row.RowIndex].Values["NroCuota"]);
+                ocnTEMESTADOCUENTA.tecImporte = Convert.ToDecimal(GrillaHistorial.DataKeys[row.RowIndex].Values["Importe"]);
+                ocnTEMESTADOCUENTA.tecColegio = Convert.ToString(GrillaHistorial.DataKeys[row.RowIndex].Values["Colegio"]);
+                ocnTEMESTADOCUENTA.tecCurso = Convert.ToString(GrillaHistorial.DataKeys[row.RowIndex].Values["Curso"]);
+                ocnTEMESTADOCUENTA.tecImpPagado = Convert.ToDecimal(GrillaHistorial.DataKeys[row.RowIndex].Values["ImpPagado"]);
+                ocnTEMESTADOCUENTA.tecFchPago = Convert.ToString(GrillaHistorial.DataKeys[row.RowIndex].Values["FechaPago"]);
+                ocnTEMESTADOCUENTA.tecImpInteres = Convert.ToDecimal(GrillaHistorial.DataKeys[row.RowIndex].Values["ImporteInteres"]);
+                ocnTEMESTADOCUENTA.tecBeca = Convert.ToString(GrillaHistorial.DataKeys[row.RowIndex].Values["Beca"]);
+                ocnTEMESTADOCUENTA.tecFechaVto = Convert.ToDateTime(GrillaHistorial.DataKeys[row.RowIndex].Values["FechaVto"]);
+                ocnTEMESTADOCUENTA.tecLugarPago = Convert.ToString(GrillaHistorial.DataKeys[row.RowIndex].Values["LP"]);
+                ocnTEMESTADOCUENTA.tecFormaPago = Convert.ToString(GrillaHistorial.DataKeys[row.RowIndex].Values["FP"]);
+                ocnTEMESTADOCUENTA.tecTotalCuotasImpagas = Convert.ToDecimal(TexCuotas.Text.ToString());
+                ocnTEMESTADOCUENTA.tecTotalInteres = Convert.ToDecimal(txtIntereses.Text.ToString());
+                ocnTEMESTADOCUENTA.tecTotalDeudaalaFecha = Convert.ToDecimal(txtTot.Text.ToString());
+                ocnTEMESTADOCUENTA.Insertar2();
+            }
+
+            // 2) Cargamos el mismo reporte (.rpt) que usa "Imprimir", con el mismo parámetro @ParamStr1
+            string rutaReporte = MapPath("~/PaginasGenerales/Reportes/EstadoCuentaGestionPago.rpt");
+            cr.Load(rutaReporte);
+
+            ParameterValues Params = new ParameterValues();
+            ParameterDiscreteValue Par = new ParameterDiscreteValue();
+            Par.Value = aluNombre.Text;
+            Params.Add(Par);
+            cr.DataDefinition.ParameterFields["@ParamStr1"].ApplyCurrentValues(Params);
+
+            AplicarLogonATablas(cr);
+
+            // 3) Exportamos a memoria (en vez de a la Response, como hace Reporte.aspx.cs)
+            using (Stream streamPdf = cr.ExportToStream(ExportFormatType.PortableDocFormat))
+            using (MemoryStream ms = new MemoryStream())
+            {
+                streamPdf.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+        finally
+        {
+            if (cr.IsLoaded)
+            {
+                cr.Close();
+            }
+            cr.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Aplica el logon a las tablas del reporte tomando los datos de la MISMA cadena de conexión
+    /// que ya usa toda la capa de Datos (appSettings "ConexionCadena" en Web.config), en vez de
+    /// hardcodear usuario/servidor/clave como hace hoy Reporte.aspx.cs.
+    /// </summary>
+    private void AplicarLogonATablas(ReportDocument cr)
+    {
+        string cadena = ConfigurationManager.AppSettings["ConexionCadena"];
+
+        var partes = cadena.Split(';')
+            .Select(p => p.Split(new[] { '=' }, 2))
+            .Where(p => p.Length == 2)
+            .ToDictionary(p => p[0].Trim().ToLower(), p => p[1].Trim());
+
+        ConnectionInfo crConnectionInfo = new ConnectionInfo();
+        if (partes.ContainsKey("data source")) crConnectionInfo.ServerName = partes["data source"];
+        if (partes.ContainsKey("initial catalog")) crConnectionInfo.DatabaseName = partes["initial catalog"];
+        if (partes.ContainsKey("user id")) crConnectionInfo.UserID = partes["user id"];
+        if (partes.ContainsKey("password")) crConnectionInfo.Password = partes["password"];
+
+        foreach (CrystalDecisions.CrystalReports.Engine.Table CrTable in cr.Database.Tables)
+        {
+            TableLogOnInfo crtablelogoninfo = CrTable.LogOnInfo;
+            crtablelogoninfo.ConnectionInfo = crConnectionInfo;
+            CrTable.ApplyLogOnInfo(crtablelogoninfo);
+            CrTable.Location = CrTable.Name;
+        }
+    }
+
+    #endregion
 
     protected void btnFacturarClick(object sender, EventArgs e)
     {

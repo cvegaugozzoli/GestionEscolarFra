@@ -472,6 +472,26 @@ namespace GESTIONESCOLAR
                 }
                 return Tabla;
             }
+            /// <summary>
+            /// Trae, para un alumno, todos sus familiares vinculados con nombre, mail y parentesco,
+            /// pensado para armar la lista de destinatarios al enviar el estado de cuenta por mail.
+            /// No reemplaza a ObtenerTodoxaluId (que usan otras pantallas con lógica de Padre/Madre/Otro fija).
+            /// </summary>
+            public DataTable ObtenerContactosMail(Int32 aluId)
+            {
+                ocdGestor = new Datos.Gestor();
+                Tabla = new DataTable();
+                try
+                {
+                    Tabla = ocdGestor.EjecutarReader("[AlumnoFamiliar.ObtenerContactosMail]", new object[,] { { "@aluId", aluId } });
+                }
+                catch (Exception oError)
+                {
+                    throw oError;
+                }
+                return Tabla;
+            }
+
             public Int32 ObtenerUnoIdFam(Int32 aluId, String Dni)
             {
                 Int32 IdMax;

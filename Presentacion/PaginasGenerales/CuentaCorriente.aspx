@@ -260,6 +260,10 @@
                     <asp:Button ID="btnImprimir2" class="btn btn-w-m btn-warning" runat="server" Text="Imprimir" Visible="true" OnClick="btnImprimirClick" Width="100%" />
                 </div>
 
+                <div class="form-group col-md-2">
+                    <asp:Button ID="btnEnviarMail" class="btn btn-w-m btn-info" runat="server" Text="Enviar por Mail" Visible="true" OnClick="btnEnviarMailClick" Width="100%" />
+                </div>
+
                 <div class="form-group col-md-5">
                     <asp:Label class="control-label" ID="lblVencido" runat="server" Font-Bold="true" Visible="false">Vencido</asp:Label>
                     <asp:TextBox ID="txtRojo" BackColor="red" ForeColor="red" Visible="false" BorderColor="Silver" type="string" class="form-control" runat="server" Enabled="False"></asp:TextBox>
@@ -271,5 +275,65 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <asp:Panel ID="pnlEnviarMail" runat="server" Visible="false" CssClass="col-sm-12" Style="background-color: #FFFFFF; margin-top: 10px; padding: 10px;">
+            <div class="ibox-content">
+
+                <div class="form-group col-md-12">
+                    <label class="control-label">Seleccione a quién enviarle el estado de cuenta (puede completar o corregir el email antes de enviar):</label>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <asp:GridView ID="grdContactosMail" runat="server" AutoGenerateColumns="false"
+                        CssClass="table table-bordered" GridLines="None" DataKeyNames="TipoOrigen,IdOrigen"
+                        Width="100%">
+                        <Columns>
+                            <asp:TemplateField HeaderText="">
+                                <ItemTemplate>
+                                    <asp:CheckBox ID="chkSeleccionado" runat="server" Checked='<%# Convert.ToBoolean(Eval("Seleccionado")) %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField DataField="Descripcion" HeaderText="Contacto" />
+                            <asp:TemplateField HeaderText="Email">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtMailContacto" runat="server" class="form-control" Text='<%# Eval("Mail") %>'></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
+                </div>
+
+                <div class="form-inline">
+                    <div class="form-group col-md-4">
+                        <asp:CheckBox ID="chkSeleccionarTodos" runat="server" Text=" Seleccionar todos" onclick="ToggleTodosContactosMail(this);" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <asp:CheckBox ID="chkGuardarEmail" runat="server" Checked="true" Text=" Guardar los emails que cargue o corrija" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <asp:Button ID="btnConfirmarEnvioMail" class="btn btn-w-m btn-primary" runat="server" Text="Enviar" OnClick="btnConfirmarEnvioMailClick" Width="100%" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <asp:Button ID="btnCancelarEnvioMail" class="btn btn-w-m btn-danger" runat="server" Text="Cancelar" CausesValidation="false" OnClick="btnCancelarEnvioMailClick" Width="100%" />
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <asp:Label ID="lblMensajeMail" runat="server" Font-Bold="true"></asp:Label>
+                </div>
+            </div>
+        </asp:Panel>
+    </div>
+
+    <script type="text/javascript">
+        function ToggleTodosContactosMail(origen) {
+            var contenedor = document.getElementById('<%= grdContactosMail.ClientID %>');
+            if (!contenedor) return;
+            var checks = contenedor.querySelectorAll("input[id*='chkSeleccionado']");
+            for (var i = 0; i < checks.length; i++) {
+                checks[i].checked = origen.checked;
+            }
+        }
+    </script>
 </asp:Content>
 

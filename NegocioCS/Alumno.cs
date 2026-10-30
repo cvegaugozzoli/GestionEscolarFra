@@ -334,9 +334,9 @@ namespace GESTIONESCOLAR
                         }
                         else
                         {
-                            this.aluPreg2 = "";
+                            this.aluPreg1 = "";
                         }
-                        if (Fila.Rows[0]["aluPreg1"].ToString().Trim().Length > 0)
+                        if (Fila.Rows[0]["aluPreg2"].ToString().Trim().Length > 0)
                         {
                             this.aluPreg2 = Convert.ToString(Fila.Rows[0]["aluPreg2"]);
                         }
@@ -347,14 +347,6 @@ namespace GESTIONESCOLAR
                         if (Fila.Rows[0]["aluPreg3"].ToString().Trim().Length > 0)
                         {
                             this.aluPreg3 = Convert.ToString(Fila.Rows[0]["aluPreg3"]);
-                        }
-                        else
-                        {
-                            this.aluDomFliar = "";
-                        }
-                        if (Fila.Rows[0]["aluDomFliar"].ToString().Trim().Length > 0)
-                        {
-                            this.aluDomFliar = Convert.ToString(Fila.Rows[0]["aluDomFliar"]);
                         }
                         else
                         {

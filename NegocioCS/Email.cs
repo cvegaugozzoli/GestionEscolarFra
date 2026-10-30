@@ -22,7 +22,7 @@ namespace GESTIONESCOLAR
             public Email()
             {
                 /* Autenticacion en el Servidor */
-                server.Credentials = new System.Net.NetworkCredential("misericordistasgo@gmail.com", "App$1977");
+                server.Credentials = new System.Net.NetworkCredential("colmmguerra2020@gmail.com", "hnsk vtok iije aant");
                 server.EnableSsl = true;
             }
 

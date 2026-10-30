@@ -456,6 +456,14 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                                 ImporteBecado += (Convert.ToDecimal(row["Importe"].ToString()) - (Convert.ToDecimal(row["Importe"].ToString()) * Convert.ToDecimal(row["BecasInteres"].ToString()) / 100));
                                                 row1["Importe"] = Convert.ToDecimal(string.Format("{0:0.00}", ImporteBecado));
                                                 row1["ImporteInteres"] = Convert.ToDecimal(row2["ValorInteres"].ToString());
+
+                                                //ImporteBecado += (Convert.ToDecimal(row["Importe"].ToString()) - (Convert.ToDecimal(row["Importe"].ToString()) * Convert.ToDecimal(row["BecasInteres"].ToString()) / 100));
+                                                //row1["Importe"] = Convert.ToDecimal(string.Format("{0:0.00}", ImporteBecado));
+                                                ////row1["ImporteInteres"] = Convert.ToDecimal(dtConc.Rows[0]["InteresMensual"].ToString());
+
+                                                ////row1["ImporteInteres"] = "1000";
+                                                //row1["BecasInteres"] = row["BecasInteres"].ToString();
+
                                                 row1["AnioLectivo"] = Convert.ToInt32(row["AnioLectivo"].ToString());
                                                 row1["Beca"] = Convert.ToString((row["Becas"].ToString()));
                                                 row1["BecId"] = Convert.ToString((row["BecId"].ToString()));
@@ -560,6 +568,8 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                                 row1["ImporteInteres"] = Convert.ToDecimal(string.Format("{0:0.00}", ValorInteres));
 
                                                 row1["BecasInteres"] = row["BecasInteres"].ToString();
+
+                                                row1["ValorInteres"] = Convert.ToDecimal(row2["ValorInteres"].ToString());
 
                                                 dt.Rows.Add(row1);
                                                 Bandera = 1;
@@ -769,8 +779,8 @@ MESSAGE:<br>" + oError.Message + "<br><br>EXCEPTION:<br>" + oError.InnerExceptio
                                                             MesesAtrasados = MesesAtrasados + (DateTime.Now.Date.Month - (Convert.ToInt32(dtConc.Rows[0]["ConMesInicio"].ToString()) - 1)) - Convert.ToInt32(Convert.ToInt32(row["NroCuota"].ToString()));
                                                         }
                                                 }
-                                                Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(dtConc.Rows[0]["ConImporte"].ToString()) + ValorInteres));
-
+                                                //Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(dtConc.Rows[0]["ConImporte"].ToString()) + ValorInteres));
+                                                Single InteresMensualaPagar = (((Convert.ToSingle(dtConc.Rows[0]["ConInteresMensual"].ToString()) * MesesAtrasados) / 100) * (Convert.ToSingle(ImporteBecado) + ValorInteres));
 
                                                 if (InteresMensualaPagar > 0)
                                                 {
